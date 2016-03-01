@@ -1,0 +1,63 @@
+#!/bin/bash
+
+#author: jeff.d
+#created: 20160301
+#modified: 20160301
+
+#number of processes that will be created
+nproc=$2
+#port starts from 3000, 
+port=3000
+n=0
+cd /home/jeffd/git/dn_push
+
+start() {
+	if [ x$nproc == x ]
+	then
+		usage
+		exit
+	fi
+	while [ $n -lt $nproc ]
+	do
+		echo -n $"Starting proc with port: $port"
+		nohup node app.js -p $port > /dev/null 2>&1 & echo $! > ./pid/run_${port}.pid
+		n=`expr $n + 1`
+		port=`expr $port + 1`
+		echo $port
+	done
+}
+
+stop() {
+	for file in ./pid/*
+	do
+		if test -f $file
+		then
+			pid=`cat $file`
+			echo -e $"Process $pid is shutting down.\n"
+			kill -9 $pid
+			echo 0 > $file
+		fi
+	done
+}
+
+usage() {
+	echo $"USAGE: startup [start|stop|restart] [num_of_processes]"
+}
+
+case $1 in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	restart)
+		stop
+		start
+		;;
+	*)
+		usage
+		;;
+esac
+
+exit

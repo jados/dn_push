@@ -1,0 +1,28 @@
+{
+  "name": "socket.io-redis",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "body-parser": "^1.7.0",
+    "express": "^4.8.7",
+    "socket.io": "^1.0.6",
+    "socket.io-client": "*",
+    "ioredis": "1.15.1",
+    "log4js": "*",
+    "serve-static": "*",
+    "minimist": "*"
+  },
+  "description": "app uses with 300[0-3], data receiver with port 400[0-3], proxy with port 8000",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jados/socket.io-redis"
+  },
+  "author": "Jeff.D (jados.dong@gmail.com)",
+  "license": "MIT",
+  "homepage": "https://github.com/jados/socket.io-redis"
+}

@@ -1,0 +1,21 @@
+
+<html>
+<head>
+<title>WebSocket Client</title>
+</head>
+<script type="text/javascript" src="http://static.sporttery.cn/info/jslib/jq/jquery-1.7.min.js"></script>
+<body>
+<div id="a">123</div>
+<!--<script src="https://cdn.socket.io/socket.io-1.4.3.js"></script>-->
+<script src="socket.io-1.4.3.js"></script>
+<script>
+$(document).ready(function(){
+    var socket = io.connect('10.1.1.69:8000');
+    socket.on('getData', function(data){
+        $('#a').html('data:<a href="' + data.link +'">' + data.title + '</a>');
+    });
+});
+</script>
+</body>
+</html>
+
