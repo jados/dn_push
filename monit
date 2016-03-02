@@ -1,0 +1,41 @@
+#!/bin/bash
+
+pid=$2
+
+getCpu() { 
+	CpuValue=`ps -p $pid -o pcpu | grep -v CPU` 
+	echo $CpuValue 
+}
+
+getMem() {
+	mem=`ps -o rss -p $pid | grep -v RSS`
+	echo `expr $mem / 1000`
+}
+
+getDes() { 
+	DES=`ls /proc/$2/fd | wc -l` 
+	echo $DES 
+}
+
+getSysCpu() {
+	cpuIdle=`vmstat 1 5 |sed -n '3,$p' |awk '{x = x + $15} END {print x/5}'`
+	cpuNum=`echo "100-$cpuIdle" | bc`
+	echo $cpuNum
+}
+
+case $1 in
+	cpu)
+		getCpu
+		;;
+	mem)
+		getMem
+		;;
+	des)
+		getDes
+		;;
+	syscpu)
+		getSysCpu
+		;;
+esac
+
+exit
