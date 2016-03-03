@@ -21,8 +21,8 @@ start() {
 	while [ $n -lt $nproc ]
 	do
 		echo -e $"Starting proc with port: $port\n"
-		nohup node app.js -p $port > /dev/null 2>&1 & echo $! > ./pid/run_${port}.pid
-		nohup node in.js -p $port_in > /dev/null 2>&1 & echo $! > ./pid/in_${port}.pid
+		nohup node server.js -p $port > /dev/null 2>&1 & echo $! > ./pid/run_${port}.pid
+		nohup node receiver.js -p $port_in > /dev/null 2>&1 & echo $! > ./pid/in_${port}.pid
 		n=`expr $n + 1`
 		port=`expr $port + 1`
 		port_in=`expr $port_in + 1`
@@ -44,7 +44,7 @@ stop() {
 
 getStatus() {
 	awkfile=`dirname $(readlink -f $0)`/status.awk
-	ps aux | awk '$12=="app.js" || $12=="in.js" && $14>0 {print $2,$12,$3,$6,$14,$9}' | sort -k5 -n | awk -f $awkfile
+	ps aux | awk '$12=="server.js" || $12=="receiver.js" && $14>0 {print $2,$12,$3,$6,$14,$9}' | sort -k5 -n | awk -f $awkfile
 }
 
 usage() {
