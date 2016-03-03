@@ -8,6 +8,7 @@
 nproc=$2
 #port starts from 3000, 
 port=3000
+port_in=4000
 n=0
 cd /home/jeffd/git/dn_push
 
@@ -19,11 +20,12 @@ start() {
 	fi
 	while [ $n -lt $nproc ]
 	do
-		echo -n $"Starting proc with port: $port"
+		echo -e $"Starting proc with port: $port\n"
 		nohup node app.js -p $port > /dev/null 2>&1 & echo $! > ./pid/run_${port}.pid
+		nohup node in.js -p $port_in > /dev/null 2>&1 & echo $! > ./pid/in_${port}.pid
 		n=`expr $n + 1`
 		port=`expr $port + 1`
-		echo $port
+		port_in=`expr $port_in + 1`
 	done
 }
 
@@ -40,6 +42,11 @@ stop() {
 	done
 }
 
+getStatus() {
+	awkfile=`dirname $(readlink -f $0)`/status.awk
+	ps aux | awk '$12=="app.js" || $12=="in.js" && $14>0 {print $2,$12,$3,$6,$14,$9}' | sort -k5 -n | awk -f $awkfile
+}
+
 usage() {
 	echo $"USAGE: startup [start|stop|restart] [num_of_processes]"
 }
@@ -54,6 +61,9 @@ case $1 in
 	restart)
 		stop
 		start
+		;;
+	status)
+		getStatus
 		;;
 	*)
 		usage
