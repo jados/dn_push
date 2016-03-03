@@ -1,5 +1,5 @@
 {
-  "name": "socket.io-redis",
+  "name": "dn_push",
   "version": "0.0.1",
   "private": true,
   "scripts": {

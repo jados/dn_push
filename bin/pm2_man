@@ -1,0 +1,57 @@
+#!/bin/bash
+
+#author: jeff.d
+#created: 20160302
+#modified: 20160302
+#usage: pm2 start app.js -i 4 -- -p 3000
+#$1: action
+#$2: num of processes
+
+#number of processes that will be created
+nproc=$2
+#port starts from 3000, 
+port=3000
+port_in=4000
+n=0
+cd /home/jeffd/git/dn_push
+
+start() {
+	if [ x$nproc == x ]
+	then
+		usage
+		exit
+	fi
+	while [ $n -lt $nproc ]
+	do
+		echo -n $"Starting proc with port: $port"
+		pm2 start app.js -p $port
+		n=`expr $n + 1`
+		port=`expr $port + 1`
+	done
+}
+
+stop() {
+	pm2 stop app
+}
+
+usage() {
+	echo $"USAGE: pm2_man [start|stop|restart] [num_of_processes]"
+}
+
+case $1 in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	restart)
+		stop
+		start
+		;;
+	*)
+		usage
+		;;
+esac
+
+exit
